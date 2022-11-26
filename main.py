@@ -8,7 +8,7 @@ pygame.font.init()
 WIDTH = 900
 HEIGHT = 750
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('SPACE WAR')
+pygame.display.set_caption('HATYAI CHICKEN SPACE WAR')
 
 #load img
 RED_SPACE_SHIP = pygame.image.load(os.path.join('assets', 'red_enemy_small.png'))
