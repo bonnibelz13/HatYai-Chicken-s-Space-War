@@ -2,8 +2,10 @@ import pygame
 import os
 import time
 import random
+from pygame import mixer
 
 pygame.font.init()
+pygame.init()
 
 WIDTH = 900
 HEIGHT = 750
@@ -28,8 +30,8 @@ YELLOW_LASER = pygame.image.load(os.path.join('assets', 'yellow player laser.png
 BG  = pygame.transform.scale(pygame.image.load(os.path.join('assets', 'space_bg.png')), (WIDTH, HEIGHT))
 #SOUND
 MENU_SOUND = mixer.Sound(os.path.join('sounds', '8bit-music-for-game-68698.mp3'))
-BG_SOUND = mixer.Sound(os.path.join('sounds', background.wav')
-LASER_SOUND = mixer.Sounds(os.path.join('sounds', 'laser.wav'))
+BG_SOUND = mixer.Sound(os.path.join('sounds', 'background.wav'))
+LASER_SOUND = mixer.Sound(os.path.join('sounds', 'laser.wav'))
 EXPLOSION_SOUND = mixer.Sound(os.path.join('sounds', '8-bit-explosion1wav-14656.mp3'))                                    
 PAUSED_SOUND = mixer.Sound(os.path.join('sounds', 'attack-jingle-sound-effect-jvanko-125083.mp3'))
                                     
@@ -110,7 +112,7 @@ class Player(Ship):
             laser.move(vel)
             if laser.off_screen(HEIGHT):
                 self.lasers.remove(laser)
-                EXPLOTION_SOUND.play() #เสียงตอนยิงโดน 
+                EXPLOSION_SOUND.play() #เสียงตอนยิงโดน 
             else:
                 for obj in objs:
                     if laser.collision(obj):
