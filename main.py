@@ -75,6 +75,7 @@ class Ship:
                 self.lasers.remove(laser)
             elif laser.collision(obj):
                 obj.health -= 100
+                EXPLOSION_SOUND.play()
                 self.lasers.remove(laser)
     
     def cooldown(self):
@@ -109,6 +110,7 @@ class Player(Ship):
             laser.move(vel)
             if laser.off_screen(HEIGHT):
                 self.lasers.remove(laser)
+                EXPLOTION_SOUND.play() #เสียงตอนยิงโดน 
             else:
                 for obj in objs:
                     if laser.collision(obj):
