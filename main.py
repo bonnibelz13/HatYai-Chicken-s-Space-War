@@ -26,7 +26,13 @@ YELLOW_LASER = pygame.image.load(os.path.join('assets', 'yellow player laser.png
 
 #BG
 BG  = pygame.transform.scale(pygame.image.load(os.path.join('assets', 'space_bg.png')), (WIDTH, HEIGHT))
-
+#SOUND
+MENU_SOUND = mixer.Sound(os.path.join('sounds', '8bit-music-for-game-68698.mp3'))
+BG_SOUND = mixer.Sound(os.path.join('sounds', background.wav')
+LASER_SOUND = mixer.Sounds(os.path.join('sounds', 'laser.wav'))
+EXPLOSION_SOUND = mixer.Sound(os.path.join('sounds', '8-bit-explosion1wav-14656.mp3'))                                    
+PAUSED_SOUND = mixer.Sound(os.path.join('sounds', 'attack-jingle-sound-effect-jvanko-125083.mp3'))
+                                    
 class Laser:
     def __init__(self, x, y, img):
         self.x = x
