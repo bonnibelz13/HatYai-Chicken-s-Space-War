@@ -27,7 +27,9 @@ BLUE_LASER = pygame.image.load(os.path.join('assets', 'player laser.png'))
 YELLOW_LASER = pygame.image.load(os.path.join('assets', 'yellow player laser.png'))
 
 #BG
-BG  = pygame.transform.scale(pygame.image.load(os.path.join('assets', 'space_bg.png')), (WIDTH, HEIGHT))
+BG_MENU = pygame.transform.scale(pygame.image.load(os.path.join('assets', 'earth space.jpg')), (WIDTH, HEIGHT))
+BG_GAME  = pygame.transform.scale(pygame.image.load(os.path.join('assets', 'space_bg.png')), (WIDTH, HEIGHT))
+
 #SOUND
 MENU_SOUND = mixer.Sound(os.path.join('sounds', '8bit-music-for-game-68698.mp3'))
 BG_SOUND = mixer.Sound(os.path.join('sounds', 'background.wav'))
