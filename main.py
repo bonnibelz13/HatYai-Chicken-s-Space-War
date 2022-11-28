@@ -76,7 +76,7 @@ class Ship:
             if laser.off_screen(HEIGHT):
                 self.lasers.remove(laser)
             elif laser.collision(obj):
-                obj.health -= 100
+                obj.health -= 10
                 EXPLOSION_SOUND.play()
                 self.lasers.remove(laser)
     
@@ -112,12 +112,23 @@ class Player(Ship):
             laser.move(vel)
             if laser.off_screen(HEIGHT):
                 self.lasers.remove(laser)
-                EXPLOSION_SOUND.play() #เสียงตอนยิงโดน 
+                EXPLOSION_SOUND.play()      #เสียงตอนยิงโดน
             else:
                 for obj in objs:
                     if laser.collision(obj):
                         objs.remove(obj)
-                        self.lasers.remove(laser)
+                        if laser in self.lasers:
+                            self.lasers.remove(laser)
+                            EXPLOSION_SOUND.play()      #เสียงตอนยิงโดน
+
+    def draw(self, window):
+        super().draw(window)
+        self.healthbar(window)      #health bar
+
+    def healthbar(self, window):
+        pygame.draw.rect(window, (255,0,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width(), 10))
+        pygame.draw.rect(window, (0,255,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width() * (self.health/self.max_health), 10))
+
 
 class Enemy(Ship):
     COLOER_MAP = {
@@ -130,7 +141,7 @@ class Enemy(Ship):
         super().__init__(x, y, health)
         self.ship_img, self.laser_img = self.COLOER_MAP[color]
         self.mask = pygame.mask.from_surface(self.ship_img)
-        self.max_health = health
+
     
     def move(self, vel):
         self.y += vel
@@ -144,7 +155,7 @@ class Enemy(Ship):
 #hitbox
 def collide(obj1, obj2):
     offset_x = obj2.x - obj1.x
-    offset_y = obj2.y - obj1.x
+    offset_y = obj2.y - obj1.y
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None
 
 #func paused
