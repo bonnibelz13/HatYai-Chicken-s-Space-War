@@ -3,6 +3,7 @@ import os
 import time
 import random
 from pygame import mixer
+import pygame.freetype
 
 pygame.font.init()
 pygame.init()
@@ -16,15 +17,16 @@ pygame.display.set_caption('HATYAI CHICKEN SPACE WAR')
 RED_SPACE_SHIP = pygame.image.load(os.path.join('assets', 'red_enemy_small.png'))
 GREEN_SPACE_SHIP = pygame.image.load(os.path.join('assets', 'green_enemy_small.png'))
 BLUE_SPACE_SHIP= pygame.image.load(os.path.join('assets', 'blue_enemy_small.png'))
+CHICK = pygame.image.load(os.path.join('assets', 'chick.png'))
 
 #player player
-YELLOW_SPACE_SHIP = pygame.image.load(os.path.join('assets', 'player ship.png'))
+YELLOW_SPACE_SHIP = pygame.image.load(os.path.join('assets', '5724-duck.png'))
 
 #LASERS
 RED_LASER = pygame.image.load(os.path.join('assets', 'player laser.png'))
 GREEN_LASER = pygame.image.load(os.path.join('assets', 'player laser.png'))
 BLUE_LASER = pygame.image.load(os.path.join('assets', 'player laser.png'))
-YELLOW_LASER = pygame.image.load(os.path.join('assets', 'yellow player laser.png'))
+YELLOW_LASER = pygame.image.load(os.path.join('assets', 'LASER YELLOW.png'))
 
 #BG
 BG_MENU = pygame.transform.scale(pygame.image.load(os.path.join('assets', 'earth space.jpg')), (WIDTH, HEIGHT))
@@ -59,7 +61,7 @@ class Laser:
         return collide(self, obj)
 
 class Ship:
-    COOLDOWN = 10
+    COOLDOWN = 20
     def __init__(self, x, y, health=100):
         self.x = x
         self.y = y
@@ -103,7 +105,7 @@ class Ship:
         return self.ship_img.get_height()
 
 class Player(Ship):
-    def __init__(self, x, y, health=1000):
+    def __init__(self, x, y, health=100):
         super().__init__(x, y, health)
         self.ship_img = YELLOW_SPACE_SHIP
         self.laser_img = YELLOW_LASER
@@ -141,7 +143,7 @@ class Enemy(Ship):
                 'blue': (BLUE_SPACE_SHIP, BLUE_LASER)
                 }
 
-    def __init__(self, x, y, color, health=1):
+    def __init__(self, x, y, color, health=100):
         super().__init__(x, y, health)
         self.ship_img, self.laser_img = self.COLOER_MAP[color]
         self.mask = pygame.mask.from_surface(self.ship_img)
@@ -207,15 +209,15 @@ def main():
     main_font = pygame.font.SysFont('Retro Gaming', 50)
     lost_font = pygame.font.SysFont('Retro Gaming', 60)
 
-    enemies = []
+
     wave_length = 5
+    laser_vel = 10
+    enemy_laser_vel = 4
 
-    laser_vel = 4
-
+    enemies = []
     enemy_vel = 1
 
     player_vel = 10 #ทุกครั้งที่กดplayerจะขยับ [เลข] pixels
-
     player = Player(300, 650)
 
 
@@ -240,6 +242,8 @@ def main():
         if lost:
             lost_label = lost_font.render('GAME OVER!!', 1, (255, 255, 255))
             WIN.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, 350))
+            BG_SOUND.stop()
+            GAMEOVER_SOUND.play()
 
         pygame.display.update()
 
@@ -263,10 +267,10 @@ def main():
             for i in range(wave_length):
                 enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['red', 'blue', 'green']))
                 enemies.append(enemy)
-
+                
         for event in pygame.event.get():    #รับeventจากuser
             if event.type == pygame.QUIT:   #ปิดเกม
-                run = False
+                quit()
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a] and player.x - player_vel > 0: #left / and player.xy +- player_vel <> 0 or HEIGHT or WIDTH คือ ไม่ให้เกินหน้าจอ
@@ -278,7 +282,11 @@ def main():
         if keys[pygame.K_s] and player.y + player_vel + player.get_height() < HEIGHT: #down
             player.y += player_vel
         if keys[pygame.K_SPACE]:    #ยิงlaser
+            LASER_SOUND.play()
             player.shoot()
+        if keys[pygame.K_ESCAPE]:   #Paused
+            BG_SOUND.stop()
+            pause()
 
 
         for enemy in enemies[:]:
@@ -286,13 +294,22 @@ def main():
             enemy.move_lasers(laser_vel, player)
 
             if random.randrange(0, 10*60) == 1:
+                LASER_SOUND.play()
                 enemy.shoot()
 
 
-            if enemy.y + enemy.get_height() > HEIGHT:
+            #Enemy ชน Player
+            if collide(enemy, player):
+                EXPLOSION_SOUND.play()
+                player.health -= 10
+                enemies.remove(enemy) 
+            
+            #Enemy ผ่านไปได้
+            elif enemy.y + enemy.get_height() > HEIGHT:
+                EXPLOSION_SOUND.play()
                 lives -= 1
                 enemies.remove(enemy)
-        
+
         player.move_lasers(-laser_vel, enemies)
         
 #หน้าแรก
