@@ -290,5 +290,40 @@ def main():
                 enemies.remove(enemy)
         
         player.move_lasers(-laser_vel, enemies)
+        
+#หน้าแรก
+def main_menu():
+    MENU_SOUND.play(-1)
+    title_font = pygame.font.Font('Retro Gaming.ttf', 40)
+    run = True
+    while run:
 
-main()
+        WIN.blit(BG_MENU, (0,0))
+        #WIN.blit(CHICK, (WIDTH/2 - CHICK.get_width()/2, 100))
+        title_label = title_font.render("Press the [SPACEBAR] to Start", 1, (255, 255, 0))
+        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 400))
+
+        MESSAGE_font = pygame.font.Font('Retro Gaming.ttf', 30)
+        MESSAGE_TO_SCREEN = MESSAGE_font.render('HATYAI CHICKEN\'S SPACE WAR', 1, (255, 255, 255))
+        WIN.blit(MESSAGE_TO_SCREEN, (WIDTH/2 - MESSAGE_TO_SCREEN.get_width()/2, 330))
+
+        pygame.display.update()
+
+
+        keys = pygame.key.get_pressed()
+        for event in pygame.event.get():
+
+            #กดX ออกเกม
+            if event.type == pygame.QUIT:
+                run = False
+
+            #SPACEBAR to Start the game
+            if keys[pygame.K_SPACE]:
+                MENU_SOUND.stop()
+                PRESS_SOUND.play()
+                BG_SOUND.play(-1)
+                main()
+
+    pygame.quit()
+
+main_menu()
