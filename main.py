@@ -224,7 +224,7 @@ def main():
     lost_count = 0
 
     def redraw_window():    #redraw img ทุกอย่าง
-        WIN.blit(BG, (0, 0))
+        WIN.blit(BG_GAME, (0, 0))
         #draw text
         lives_label = main_font.render(f'Lives: {lives}', 1, (255, 255, 255))   #(r,g,b)
         level_label = main_font.render(f'Level: {level}', 1, (255, 255, 255))
