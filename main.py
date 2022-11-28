@@ -146,6 +146,44 @@ def collide(obj1, obj2):
     offset_x = obj2.x - obj1.x
     offset_y = obj2.y - obj1.x
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None
+
+#func paused
+def pause():
+    paused = True
+    PAUSED_SOUND.play()
+    while paused:
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:   # กดX ออกเกม
+                pygame.quit()
+                quit()
+
+            if event.type == pygame.KEYDOWN:
+                PRESS_SOUND.play()
+                if event.key == pygame.K_c:     #Press C to continue the game
+                    BG_SOUND.play()
+                    paused = False
+                elif event.key == pygame.K_r:   #Pres R to restart the game
+                    main_menu()
+                elif event.key == pygame.K_q:   #Press Q to exit
+                    pygame.quit()
+                    quit()
+        
+        MESSAGE_font = pygame.font.Font('Retro Gaming.ttf', 70)
+        MESSAGE_TO_SCREEN = MESSAGE_font.render('PAUSED', 1, (255, 255, 255))
+        WIN.blit(MESSAGE_TO_SCREEN, (WIDTH/2 - MESSAGE_TO_SCREEN.get_width()/2, 300))
+        MESSAGE_font = pygame.font.Font('Retro Gaming.ttf', 40)
+        MESSAGE_TO_SCREEN = MESSAGE_font.render('Press [C] to continue', 1, (255, 255, 255))
+        WIN.blit(MESSAGE_TO_SCREEN, (WIDTH/2 - MESSAGE_TO_SCREEN.get_width()/2, 400))
+        MESSAGE_font = pygame.font.Font('Retro Gaming.ttf', 30)
+        MESSAGE_TO_SCREEN = MESSAGE_font.render('[Q] to exit', 1, (255, 255, 255))
+        WIN.blit(MESSAGE_TO_SCREEN, (WIDTH/1.2 - MESSAGE_TO_SCREEN.get_width()/2, 670))
+        MESSAGE_TO_SCREEN = MESSAGE_font.render('[R] to restart', 1, (255, 255, 255))
+        WIN.blit(MESSAGE_TO_SCREEN, (WIDTH/6 - MESSAGE_TO_SCREEN.get_width()/2, 670))
+        #gameDisplay.fill(white)
+
+        pygame.display.update()
+
 def main():
     run = True
     FPS = 60
