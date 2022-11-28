@@ -290,4 +290,5 @@ def main():
                 enemies.remove(enemy)
         
         player.move_lasers(-laser_vel, enemies)
+
 main()
