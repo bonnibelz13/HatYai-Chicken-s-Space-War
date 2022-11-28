@@ -34,8 +34,10 @@ BG_GAME  = pygame.transform.scale(pygame.image.load(os.path.join('assets', 'spac
 MENU_SOUND = mixer.Sound(os.path.join('sounds', '8bit-music-for-game-68698.mp3'))
 BG_SOUND = mixer.Sound(os.path.join('sounds', 'background.wav'))
 LASER_SOUND = mixer.Sound(os.path.join('sounds', 'laser.wav'))
-EXPLOSION_SOUND = mixer.Sound(os.path.join('sounds', '8-bit-explosion1wav-14656.mp3'))                                    
+EXPLOSION_SOUND = mixer.Sound(os.path.join('sounds', '8-bit-explosion1wav-14656.mp3'))
+GAMEOVER_SOUND = mixer.Sound(os.path.join('sounds', 'mixkit-retro-arcade-game-over-470.wav'))
 PAUSED_SOUND = mixer.Sound(os.path.join('sounds', 'attack-jingle-sound-effect-jvanko-125083.mp3'))
+PRESS_SOUND = mixer.Sound(os.path.join('sounds', 'attack-jingle-sound-effect-jvanko-125083.mp3'))
                                     
 class Laser:
     def __init__(self, x, y, img):
