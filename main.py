@@ -159,7 +159,7 @@ class Enemy(Ship):
             self.lasers.append(laser)
             self.cool_down_counter = 1
             
- class Heal_Hp(Ship):
+class Heal_Hp(Ship):
     HEAL = {'heart': (HEALING_HEART)}
 
     def __init__(self, x, y, color, health=100):
@@ -218,7 +218,8 @@ def main():
     FPS = 60
     level = 0
     lives = 5
-    main_font = pygame.font.SysFont('Retro Gaming', 50)
+    score = 0
+    main_font = pygame.font.SysFont('Retro Gaming', 45)
     lost_font = pygame.font.SysFont('Retro Gaming', 60)
 
 
@@ -233,7 +234,7 @@ def main():
     heal_vel = 2
 
     player_vel = 10 #ทุกครั้งที่กดplayerจะขยับ [เลข] pixels
-    player = Player(300, 650)
+    player = Player(375, 600)
 
 
     clock = pygame.time.Clock()
@@ -243,10 +244,12 @@ def main():
     def redraw_window():    #redraw img ทุกอย่าง
         WIN.blit(BG_GAME, (0, 0))
         #draw text
-        lives_label = main_font.render(f'Lives: {lives}', 1, (255, 255, 255))   #(r,g,b)
-        level_label = main_font.render(f'Level: {level}', 1, (255, 255, 255))
+        lives_label = main_font.render(f'LIVES: {lives}', 1, (255, 255, 255))   #(r,g,b)
+        level_label = main_font.render(f'LEVEL: {level}', 1, (255, 255, 255))
+        score_label = main_font.render(f'SCORE: {score}', 1, (255, 255, 255))
 
         WIN.blit(lives_label, (10, 10))
+        WIN.blit(score_label, (10, 50))
         WIN.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))
 
         for enemy in enemies:
@@ -281,14 +284,22 @@ def main():
 
         if len(enemies) == 0:
             level += 1
-            wave_length += 5    #เพิ่มenemy 5 ตัว ทุกๆเลเวล
-            for i in range(wave_length):
-                enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['red', 'blue', 'green']))
-                enemies.append(enemy)
-        if level%2 == 0:    #ปล่อยHeal ทุกๆ 2 level 
+            if level > 1:
+                score += 500
+            if level%2 == 0:    #ปล่อยHeal ทุกๆ 2 level 
                 for i in range(level//2): #เพิ่มHeal 1 อัน ทุกรอบที่ปล่อย Heal
                     heal = Heal_Hp(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['heart']))
                     healing_potion.append(heal)
+            wave_length += 5    #เพิ่มenemy 5 ตัว ทุกๆเลเวล
+            if level == 3:
+                # EXCLUSIVE ระดับ 1
+                for _ in range(wave_length + 5):
+                    strong_enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['green']))
+                    enemies.append(strong_enemy)
+            else:
+                for i in range(wave_length):
+                    enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['red', 'blue', 'green']))
+                    enemies.append(enemy)
                 
         for event in pygame.event.get():    #รับeventจากuser
             if event.type == pygame.QUIT:   #ปิดเกม
@@ -324,7 +335,7 @@ def main():
             if collide(enemy, player):
                 EXPLOSION_SOUND.play()
                 player.health -= 10
-                enemies.remove(enemy) 
+                enemies.remove(enemy)
             
             #Enemy ผ่านไปได้
             elif enemy.y + enemy.get_height() > HEIGHT:
@@ -332,7 +343,7 @@ def main():
                 lives -= 1
                 enemies.remove(enemy)
                 
-         for heal in healing_potion[:]:
+        for heal in healing_potion[:]:
             heal.move(heal_vel)
             if collide(heal, player):
                 HEAL_SOUND.play()
