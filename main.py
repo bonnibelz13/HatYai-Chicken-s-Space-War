@@ -18,6 +18,7 @@ RED_SPACE_SHIP = pygame.image.load(os.path.join('assets', 'red_enemy_small.png')
 GREEN_SPACE_SHIP = pygame.image.load(os.path.join('assets', 'green_enemy_small.png'))
 BLUE_SPACE_SHIP= pygame.image.load(os.path.join('assets', 'blue_enemy_small.png'))
 CHICK = pygame.image.load(os.path.join('assets', 'chick.png'))
+HEALING_HEART = pygame.image.load(os.path.join('assets', 'healing-heart.png'))
 
 #player player
 YELLOW_SPACE_SHIP = pygame.image.load(os.path.join('assets', '5724-duck.png'))
@@ -40,6 +41,7 @@ EXPLOSION_SOUND = mixer.Sound(os.path.join('sounds', '8-bit-explosion1wav-14656.
 GAMEOVER_SOUND = mixer.Sound(os.path.join('sounds', 'mixkit-retro-arcade-game-over-470.wav'))
 PAUSED_SOUND = mixer.Sound(os.path.join('sounds', 'attack-jingle-sound-effect-jvanko-125083.mp3'))
 PRESS_SOUND = mixer.Sound(os.path.join('sounds', 'attack-jingle-sound-effect-jvanko-125083.mp3'))
+HEAL_SOUND = mixer.Sound(os.path.join('sounds', 'Healing-SE.mp3'))
                                     
 class Laser:
     def __init__(self, x, y, img):
@@ -148,7 +150,6 @@ class Enemy(Ship):
         self.ship_img, self.laser_img = self.COLOER_MAP[color]
         self.mask = pygame.mask.from_surface(self.ship_img)
 
-    
     def move(self, vel):
         self.y += vel
 
@@ -157,7 +158,18 @@ class Enemy(Ship):
             laser = Laser(self.x+35, self.y, self.laser_img)
             self.lasers.append(laser)
             self.cool_down_counter = 1
+            
+ class Heal_Hp(Ship):
+    HEAL = {'heart': (HEALING_HEART)}
 
+    def __init__(self, x, y, color, health=100):
+        super().__init__(x, y, health)
+        self.ship_img = self.HEAL[color]
+        self.mask = pygame.mask.from_surface(self.ship_img)
+
+    def move(self, vel):
+        self.y += vel
+            
 #hitbox
 def collide(obj1, obj2):
     offset_x = obj2.x - obj1.x
@@ -216,6 +228,9 @@ def main():
 
     enemies = []
     enemy_vel = 1
+    
+    healing_potion = []
+    heal_vel = 2
 
     player_vel = 10 #ทุกครั้งที่กดplayerจะขยับ [เลข] pixels
     player = Player(300, 650)
@@ -236,7 +251,10 @@ def main():
 
         for enemy in enemies:
             enemy.draw(WIN)
-
+            
+        for heal in healing_potion:
+            heal.draw(WIN)
+            
         player.draw(WIN)
 
         if lost:
@@ -267,6 +285,10 @@ def main():
             for i in range(wave_length):
                 enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['red', 'blue', 'green']))
                 enemies.append(enemy)
+        if level%2 == 0:    #ปล่อยHeal ทุกๆ 2 level 
+                for i in range(level//2): #เพิ่มHeal 1 อัน ทุกรอบที่ปล่อย Heal
+                    heal = Heal_Hp(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['heart']))
+                    healing_potion.append(heal)
                 
         for event in pygame.event.get():    #รับeventจากuser
             if event.type == pygame.QUIT:   #ปิดเกม
@@ -309,6 +331,15 @@ def main():
                 EXPLOSION_SOUND.play()
                 lives -= 1
                 enemies.remove(enemy)
+                
+         for heal in healing_potion[:]:
+            heal.move(heal_vel)
+            if collide(heal, player):
+                HEAL_SOUND.play()
+                if player.health < 100:
+                    player.health += 10
+                healing_potion.remove(heal)
+
 
         player.move_lasers(-laser_vel, enemies)
         
