@@ -291,6 +291,7 @@ def main():
                     heal = Heal_Hp(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['heart']))
                     healing_potion.append(heal)
             wave_length += 5    #เพิ่มenemy 5 ตัว ทุกๆเลเวล
+            # DRAFT : จะเป็นด่าน EXCLUSIVE เริ่มจากง่าย ๆ ไปยาก ดราฟไว้ตอนนี้คือด่านที่ 3
             if level == 3:
                 # EXCLUSIVE ระดับ 1
                 for _ in range(wave_length + 5):
