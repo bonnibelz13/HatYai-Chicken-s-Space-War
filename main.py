@@ -184,6 +184,37 @@ class Enemy(Ship):
             self.lasers.append(laser)
             self.cool_down_counter = 1
 
+class Enemy_V2(Ship):
+    COLOER_MAP = {
+                'red': (RED_SPACE_SHIP, RED_LASER),
+                'green': (GREEN_SPACE_SHIP, GREEN_LASER),
+                'blue': (BLUE_SPACE_SHIP, BLUE_LASER)
+                }
+
+    def __init__(self, x, y, color, health=10):
+        super().__init__(x, y, health)
+        self.ship_img, self.laser_img = self.COLOER_MAP[color]
+        self.mask = pygame.mask.from_surface(self.ship_img)
+        self.move_counter = 1
+        self.move_direction = 1
+
+
+    def move(self, vel):
+        if self.y < 80:
+            self.y += vel
+        if self.y > 80:
+            self.x += vel * self.move_counter
+            if self.x > 650:
+                self.move_counter = -1
+            elif self.x < -50:
+                self.move_counter = 1
+
+    def shoot(self):
+        if self.cool_down_counter == 0:
+            laser = Laser(self.x+35, self.y, self.laser_img)
+            self.lasers.append(laser)
+            self.cool_down_counter = 1
+
 
 class Boss(Ship):
     def __init__(self, x, y, health=300):
@@ -381,11 +412,21 @@ def main():
                     healing_potion.append(heal)
 
         #ENEMIES SPAWN
-            wave_length += 5    #เพิ่มenemy 5 ตัว ทุกๆเลเวล
+            wave_length += 3    #เพิ่มenemy 5 ตัว ทุกๆเลเวล
             if level == 3:
-                # EXCLUSIVE ระดับ 1
-                for _ in range(wave_length + 5):
-                    strong_enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['green']))
+                for _ in range(wave_length):
+                    strong_enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['red', 'blue', 'green']))
+                    enemies.append(strong_enemy)
+                for _ in range(2):
+                    strong_enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['blue']))
+                    enemies.append(strong_enemy)
+            if level == 4:
+                # EXCLUSIVE ระดับ 2
+                for _ in range(wave_length - 5):
+                    strong_enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['red', 'blue', 'green']))
+                    enemies.append(strong_enemy)
+                for _ in range(5):
+                    strong_enemy = Enemy_V2(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['red', 'blue', 'green']))
                     enemies.append(strong_enemy)
             else:
                 for i in range(wave_length):
@@ -398,6 +439,9 @@ def main():
             boss_items = Boss(350, -200)
             bosses.append(boss_items)
             BOSS_DUCK_SOUND.play(-1)
+            for _ in range(5): # Drop Heal ก่อนเจอบอส
+                    heal = Heal_Hp(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['heart']))
+                    healing_potion.append(heal)
         # if boss_spawn >= 1:     #ในกรณีมีบอส และเลือดบอส <= 0 level += 1
         #     if boss_items.health <= 0:
         #         level += 1
