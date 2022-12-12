@@ -8,32 +8,34 @@ import pygame.freetype
 pygame.font.init()
 pygame.init()
 
+#---------------- RESOLUTION ----------------#
 WIDTH = 900
 HEIGHT = 750
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('HATYAI CHICKEN SPACE WAR')
 
-#load img
+#---------------- load img ----------------#
 RED_SPACE_SHIP = pygame.image.load(os.path.join('assets', 'red_enemy_small.png'))
 GREEN_SPACE_SHIP = pygame.image.load(os.path.join('assets', 'green_enemy_small.png'))
 BLUE_SPACE_SHIP= pygame.image.load(os.path.join('assets', 'blue_enemy_small.png'))
 CHICK = pygame.image.load(os.path.join('assets', 'chick.png'))
 HEALING_HEART = pygame.image.load(os.path.join('assets', 'healing-heart.png'))
+DUCK = pygame.image.load(os.path.join('assets', 'DUCK.png'))
 
-#player player
+#---------------- player img ----------------#
 YELLOW_SPACE_SHIP = pygame.image.load(os.path.join('assets', '5724-duck.png'))
 
-#LASERS
+#---------------- LASERS img ----------------#
 RED_LASER = pygame.image.load(os.path.join('assets', 'player laser.png'))
 GREEN_LASER = pygame.image.load(os.path.join('assets', 'player laser.png'))
 BLUE_LASER = pygame.image.load(os.path.join('assets', 'player laser.png'))
 YELLOW_LASER = pygame.image.load(os.path.join('assets', 'LASER YELLOW.png'))
 
-#BG
+#---------------- BG ----------------#
 BG_MENU = pygame.transform.scale(pygame.image.load(os.path.join('assets', 'earth space.jpg')), (WIDTH, HEIGHT))
 BG_GAME  = pygame.transform.scale(pygame.image.load(os.path.join('assets', 'space_bg.png')), (WIDTH, HEIGHT))
 
-#SOUND
+#---------------- SOUND ----------------#
 MENU_SOUND = mixer.Sound(os.path.join('sounds', '8bit-music-for-game-68698.mp3'))
 BG_SOUND = mixer.Sound(os.path.join('sounds', 'background.wav'))
 LASER_SOUND = mixer.Sound(os.path.join('sounds', 'laser.wav'))
@@ -42,7 +44,24 @@ GAMEOVER_SOUND = mixer.Sound(os.path.join('sounds', 'mixkit-retro-arcade-game-ov
 PAUSED_SOUND = mixer.Sound(os.path.join('sounds', 'attack-jingle-sound-effect-jvanko-125083.mp3'))
 PRESS_SOUND = mixer.Sound(os.path.join('sounds', 'attack-jingle-sound-effect-jvanko-125083.mp3'))
 HEAL_SOUND = mixer.Sound(os.path.join('sounds', 'Healing-SE.mp3'))
-                                    
+LEVEL_UP_SOUND = mixer.Sound(os.path.join('sounds', 'level-up.wav'))
+BOSS_DUCK_SOUND = mixer.Sound(os.path.join('sounds', 'boss-duck.wav'))
+BOSS_DUCK_DEAD_SOUND = mixer.Sound(os.path.join('sounds', 'boss-duck-dead.mp3'))
+
+#---------------- SET VOLUME SOUND ----------------#
+MENU_SOUND.set_volume(0.1)
+BG_SOUND.set_volume(0.1)
+LASER_SOUND.set_volume(0.1)
+EXPLOSION_SOUND.set_volume(0.05)
+GAMEOVER_SOUND.set_volume(0.1)
+PAUSED_SOUND.set_volume(0.1)
+PRESS_SOUND.set_volume(0.1)
+HEAL_SOUND.set_volume(0.1)
+LEVEL_UP_SOUND.set_volume(0.1)
+BOSS_DUCK_SOUND.set_volume(0.08)
+BOSS_DUCK_DEAD_SOUND.set_volume(0.6)
+
+#---------------- ALL CLASS setting ----------------#
 class Laser:
     def __init__(self, x, y, img):
         self.x = x
