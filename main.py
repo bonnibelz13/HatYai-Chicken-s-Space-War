@@ -321,6 +321,7 @@ def main():
         if keys[pygame.K_ESCAPE]:   #Paused
             BG_SOUND.stop()
             pause()
+            #BOSS EVENT
 
 
         for enemy in enemies[:]:
