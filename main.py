@@ -158,6 +158,25 @@ class Enemy(Ship):
             laser = Laser(self.x+35, self.y, self.laser_img)
             self.lasers.append(laser)
             self.cool_down_counter = 1
+            class Boss(Ship):
+    def __init__(self, x, y, health=500):
+        super().__init__(x, y, health)
+        self.ship_img = DUCK
+        self.laser_img = RED_LASER
+        self.max_health = health
+        self.mask = pygame.mask.from_surface(self.ship_img)
+        self.move_counter = 1
+        self.move_direction = 1
+    
+    def move(self, vel):
+        if self.y < 80:
+            self.y += vel
+        if self.y > 80:
+            self.x += vel * self.move_counter
+            if self.x > 650:
+                self.move_counter = -1
+            elif self.x < -50:
+                self.move_counter = 1
             
 class Heal_Hp(Ship):
     HEAL = {'heart': (HEALING_HEART)}
