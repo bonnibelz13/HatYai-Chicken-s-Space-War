@@ -384,6 +384,17 @@ def main():
         player.draw(WIN)
 
         if lost:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:   # กดX ออกเกม
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    PRESS_SOUND.play()
+                    if event.key == pygame.K_r:   #Pres R to restart the game
+                        main_menu()
+                    elif event.key == pygame.K_q:   #Press Q to exit
+                        pygame.quit()
+                        quit()
             lost_label = lost_font.render('GAME OVER!!', 1, (255, 255, 255))
             WIN.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, 300))
             score_label = lost_font.render('YOUR SCORE %d'%score, 1, (255, 255, 255))
@@ -393,14 +404,8 @@ def main():
             BOSS_DUCK_SOUND.stop()
 
             title_font = pygame.font.Font('Retro Gaming.ttf', 20)
-            title_label = title_font.render("Press [R] to Restart", 1, (255, 255, 0))
+            title_label = title_font.render("Press [R] to Restart, [Q] to Exit", 1, (255, 255, 0))
             WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 600))
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_r]:
-                MENU_SOUND.stop()
-                PRESS_SOUND.play()
-                BG_SOUND.play(-1)
-                main()
 
         pygame.display.update()
 
