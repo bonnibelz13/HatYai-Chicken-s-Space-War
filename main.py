@@ -470,6 +470,8 @@ def main():
                 HEAL_SOUND.play()
                 if player.health < 100:
                     player.health += 30
+                    if player.health > 100:
+                        player.health = 100
                 healing_potion.remove(heal)
 
 #---------------- MAIN MENU ----------------#
