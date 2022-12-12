@@ -321,12 +321,17 @@ def main():
         if keys[pygame.K_ESCAPE]:   #Paused
             BG_SOUND.stop()
             pause()
+            
             #BOSS EVENT
         for boss in bosses[:]:
             boss.move(boss_vel)
             boss.move_lasers(boss_laser_vel, player)
             if random.randrange(0, 60) == 1:
               
+            if collide(boss, player):
+                EXPLOSION_SOUND.play()
+                player.health -= 20
+        player.move_lasers(-player_laser_vel, bosses)
             
 
         for enemy in enemies[:]:
