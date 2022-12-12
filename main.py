@@ -332,8 +332,8 @@ def main():
                 EXPLOSION_SOUND.play()
                 player.health -= 20
         player.move_lasers(-player_laser_vel, bosses)
-            
-
+        
+            #ENEMIES Event
         for enemy in enemies[:]:
             enemy.move(enemy_vel)
             enemy.move_lasers(laser_vel, player)
@@ -355,7 +355,7 @@ def main():
                 EXPLOSION_SOUND.play()
                 lives -= 1
                 enemies.remove(enemy)
-                
+        #HEALING EVETS
         for heal in healing_potion[:]:
             heal.move(heal_vel)
             if collide(heal, player):
