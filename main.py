@@ -326,6 +326,7 @@ def main():
             boss.move(boss_vel)
             boss.move_lasers(boss_laser_vel, player)
             if random.randrange(0, 60) == 1:
+              
             
 
         for enemy in enemies[:]:
@@ -335,6 +336,7 @@ def main():
             if random.randrange(0, 10*60) == 1:
                 LASER_SOUND.play()
                 enemy.shoot()
+        player.move_lasers(-player_laser_vel, bosses)
 
 
             #Enemy ชน Player
