@@ -469,7 +469,7 @@ def main():
             if collide(heal, player):
                 HEAL_SOUND.play()
                 if player.health < 100:
-                    player.health += 10
+                    player.health += 30
                 healing_potion.remove(heal)
 
 #---------------- MAIN MENU ----------------#
