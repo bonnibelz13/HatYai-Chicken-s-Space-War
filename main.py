@@ -20,6 +20,7 @@ GREEN_SPACE_SHIP = pygame.image.load(os.path.join('assets', 'green_enemy_small.p
 BLUE_SPACE_SHIP= pygame.image.load(os.path.join('assets', 'blue_enemy_small.png'))
 CHICK = pygame.image.load(os.path.join('assets', 'chick.png'))
 HEALING_HEART = pygame.image.load(os.path.join('assets', 'healing-heart.png'))
+GOLDEN_HEALING_HEART = pygame.image.load(os.path.join('assets', 'golden-healing-heart.png'))
 DUCK = pygame.image.load(os.path.join('assets', 'DUCK.png'))
 
 #---------------- player img ----------------#
@@ -262,6 +263,17 @@ class Heal_Hp(Ship):
     def move(self, vel):
         self.y += vel
 
+class Heal_Live(Ship): #หัวใจสีทอง
+    HEAL = {'heart': (GOLDEN_HEALING_HEART)}
+
+    def __init__(self, x, y, color, health=100):
+        super().__init__(x, y, health)
+        self.ship_img = self.HEAL[color]
+        self.mask = pygame.mask.from_surface(self.ship_img)
+
+    def move(self, vel):
+        self.y += vel
+
 #---------------- HITBOX ----------------#
 def collide(obj1, obj2):
     offset_x = obj2.x - obj1.x
@@ -319,6 +331,7 @@ def main():
     main_font = pygame.font.Font('Retro Gaming.ttf', 45)
     lost_font = pygame.font.Font('Retro Gaming.ttf', 60)
 
+    golden_healing_potion = []
     healing_potion = []
     heal_vel = 2
 
@@ -352,8 +365,8 @@ def main():
         level_label = main_font.render(f'LEVEL: {level}', 1, (255, 255, 255))
         score_label = main_font.render(f'SCORE: {score}', 1, (255, 255, 255))
 
-        WIN.blit(lives_label, (10, 10))
-        WIN.blit(score_label, (10, 50))
+        WIN.blit(lives_label, (10, 50))
+        WIN.blit(score_label, (10, 10))
         WIN.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))
 
         for heal in healing_potion:
@@ -364,15 +377,30 @@ def main():
 
         for enemy in enemies:
             enemy.draw(WIN)
+        
+        for golden_heal in golden_healing_potion:
+            golden_heal.draw(WIN)
 
         player.draw(WIN)
 
         if lost:
             lost_label = lost_font.render('GAME OVER!!', 1, (255, 255, 255))
-            WIN.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, 350))
+            WIN.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, 300))
+            score_label = lost_font.render('YOUR SCORE %d'%score, 1, (255, 255, 255))
+            WIN.blit(score_label, (WIDTH/2 - score_label.get_width()/2, 375))
             BG_SOUND.stop()
             GAMEOVER_SOUND.play()
             BOSS_DUCK_SOUND.stop()
+
+            title_font = pygame.font.Font('Retro Gaming.ttf', 20)
+            title_label = title_font.render("Press [R] to Restart", 1, (255, 255, 0))
+            WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 600))
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_r]:
+                MENU_SOUND.stop()
+                PRESS_SOUND.play()
+                BG_SOUND.play(-1)
+                main()
 
         pygame.display.update()
 
@@ -386,7 +414,7 @@ def main():
             lost_count += 1
         
         if lost:
-            if lost_count > FPS * 5:    #ขึ้นGAME OVER นาน FPS * 5 แล้วจะให้เริ่มเกมใหม่ทันที
+            if lost_count > FPS * 10:    #ขึ้นGAME OVER นาน FPS * 10 แล้วจะให้เริ่มเกมใหม่ทันที
                 run = False
             else:
                 continue
@@ -407,20 +435,24 @@ def main():
 
         #HEAL
             if level%2 == 0:    #ปล่อยHeal ทุกๆ 2 level 
-                for i in range(level//2): #เพิ่มHeal 1 อัน ทุกรอบที่ปล่อย Heal
+                for _ in range(level//2): #เพิ่มHeal 1 อัน ทุกรอบที่ปล่อย Heal
                     heal = Heal_Hp(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['heart']))
                     healing_potion.append(heal)
 
         #ENEMIES SPAWN
             wave_length += 3    #เพิ่มenemy 5 ตัว ทุกๆเลเวล
-            if level == 3:
+            if level%3 == 0:
+                # EXCLUSIVE ระดับ 1
                 for _ in range(wave_length):
                     strong_enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['red', 'blue', 'green']))
                     enemies.append(strong_enemy)
                 for _ in range(2):
                     strong_enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['blue']))
                     enemies.append(strong_enemy)
-            if level == 4:
+                # ปล่อยหัวใจสีทอง
+                golden_heal = Heal_Live(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['heart']))
+                golden_healing_potion.append(golden_heal)
+            elif level%4 == 0:
                 # EXCLUSIVE ระดับ 2
                 for _ in range(wave_length - 5):
                     strong_enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['red', 'blue', 'green']))
@@ -429,7 +461,7 @@ def main():
                     strong_enemy = Enemy_V2(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['red', 'blue', 'green']))
                     enemies.append(strong_enemy)
             else:
-                for i in range(wave_length):
+                for _ in range(wave_length):
                     enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500*level/5, -100), random.choice(['red', 'blue', 'green']))
                     enemies.append(enemy)
 
@@ -517,6 +549,13 @@ def main():
                     if player.health > 100:
                         player.health = 100
                 healing_potion.remove(heal)
+        for heal in golden_healing_potion[:]:
+            heal.move(lives)
+            if collide(golden_heal, player):
+                HEAL_SOUND.play()
+                if lives < 5:
+                    lives += 1
+                golden_healing_potion.remove(heal)
 
 #---------------- MAIN MENU ----------------#
 def main_menu():
