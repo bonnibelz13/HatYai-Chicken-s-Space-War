@@ -322,7 +322,11 @@ def main():
             BG_SOUND.stop()
             pause()
             #BOSS EVENT
-
+        for boss in bosses[:]:
+            boss.move(boss_vel)
+            boss.move_lasers(boss_laser_vel, player)
+            if random.randrange(0, 60) == 1:
+            
 
         for enemy in enemies[:]:
             enemy.move(enemy_vel)
