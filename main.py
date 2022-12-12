@@ -158,7 +158,7 @@ class Enemy(Ship):
             laser = Laser(self.x+35, self.y, self.laser_img)
             self.lasers.append(laser)
             self.cool_down_counter = 1
-            class Boss(Ship):
+class Boss(Ship):
     def __init__(self, x, y, health=500):
         super().__init__(x, y, health)
         self.ship_img = DUCK
