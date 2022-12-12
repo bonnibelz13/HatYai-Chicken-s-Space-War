@@ -391,6 +391,7 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     PRESS_SOUND.play()
                     if event.key == pygame.K_r:   #Pres R to restart the game
+                        BG_SOUND.set_volume(0.1)
                         main()
                     elif event.key == pygame.K_q:   #Press Q to exit
                         pygame.quit()
@@ -399,7 +400,7 @@ def main():
             WIN.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, 300))
             score_label = lost_font.render('YOUR SCORE %d'%score, 1, (255, 255, 255))
             WIN.blit(score_label, (WIDTH/2 - score_label.get_width()/2, 375))
-            BG_SOUND.stop()
+            BG_SOUND.set_volume(0)
             GAMEOVER_SOUND.play()
             BOSS_DUCK_SOUND.stop()
 
