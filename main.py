@@ -391,7 +391,7 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     PRESS_SOUND.play()
                     if event.key == pygame.K_r:   #Pres R to restart the game
-                        main_menu()
+                        main()
                     elif event.key == pygame.K_q:   #Press Q to exit
                         pygame.quit()
                         quit()
