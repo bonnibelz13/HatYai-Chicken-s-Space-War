@@ -446,7 +446,7 @@ def main():
                     healing_potion.append(heal)
 
         #ENEMIES SPAWN
-            wave_length += 3    #เพิ่มenemy 5 ตัว ทุกๆเลเวล
+            wave_length += 3    #เพิ่มenemy 3 ตัว ทุกๆเลเวล
             if level%3 == 0:
                 # EXCLUSIVE ระดับ 1
                 for _ in range(wave_length):
